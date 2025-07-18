@@ -1,0 +1,26 @@
+service: orders-service
+frameworkVersion: '4.17.1'
+
+provider:
+  name: aws
+  runtime: python3.11
+  region: eu-central-1
+  environment:
+    TABLE_NAME: ${env:TABLE_NAME}
+  iam:
+    role: ${env:LAMBDA_ROLE_ARN}
+
+functions:
+  createOrder:
+    handler: handler.create_order
+    events:
+      - httpApi:
+          path: /order
+          method: post
+
+  getOrder:
+    handler: handler.get_order
+    events:
+      - httpApi:
+          path: /order/{id}
+          method: get
